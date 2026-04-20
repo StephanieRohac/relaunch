@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dr. Stephanie Rohac – Strategische Architektur & Markenplattform</title>
+  <style>
+    :root {
+      --bg: #f5f1eb;
+      --surface: rgba(255,255,255,0.78);
+      --surface-strong: rgba(255,255,255,0.92);
+      --text: #1f2430;
+      --muted: #556070;
+      --line: rgba(31, 36, 48, 0.12);
+      --primary: #234a63;
+      --primary-soft: #dce8ef;
+      --secondary: #7f5a3c;
+      --accent: #3f7a67;
+      --shadow: 0 18px 45px rgba(35, 74, 99, 0.10);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --max: 1220px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(63, 122, 103, 0.10), transparent 26%),
+        radial-gradient(circle at top right, rgba(35, 74, 99, 0.12), transparent 24%),
+        linear-gradient(180deg, #f8f4ee 0%, #f3eee7 100%);
+      line-height: 1.55;
+    }
+
+    .shell {
+      width: min(calc(100% - 40px), var(--max));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+      background: rgba(245, 241, 235, 0.72);
+      border-bottom: 1px solid rgba(31, 36, 48, 0.08);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 72px;
+    }
+
+    .brand-lockup {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      transition: 180ms ease;
+    }
+
+    .nav a:hover {
+      color: var(--primary);
+      background: rgba(35, 74, 99, 0.08);
+    }
+
+    .hero {
+      padding: 64px 0 36px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.55);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-card {
+      padding: 40px;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      right: -150px;
+      top: -170px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(35, 74, 99, 0.18), transparent 62%);
+      pointer-events: none;
+    }
+
+    h1, h2, h3, h4, p { margin: 0; }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(38px, 5vw, 62px);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      max-width: 10.8ch;
+      color: #18212b;
+    }
+
+    .hero-subtitle {
+      margin-top: 18px;
+      max-width: 62ch;
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .hero-statement {
+      margin-top: 30px;
+      padding: 20px 22px;
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+    }
+
+    .hero-statement strong {
+      display: block;
+      color: var(--secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 10px;
+    }
+
+    .hero-statement p {
+      font-size: 22px;
+      line-height: 1.35;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(35, 74, 99, 0.08);
+      color: var(--primary);
+      border: 1px solid rgba(35, 74, 99, 0.10);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 18px;
+    }
+
+    .metric-card, .mini-card, .section-card {
+      padding: 26px;
+    }
+
+    .metric-card h3, .mini-card h3, .section-card h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--secondary);
+      margin-bottom: 14px;
+    }
+
+    .metric-card .big {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 34px;
+      color: var(--primary);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .metric-card p, .mini-card p, .section-copy, .list-item p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    main {
+      padding: 10px 0 80px;
+    }
+
+    .section {
+      margin-top: 22px;
+      scroll-margin-top: 90px;
+    }
+
+    .section-card {
+      padding: 34px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 26px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+    }
+
+    .section-title {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(28px, 3vw, 40px);
+      color: #1a2430;
+      line-height: 1.08;
+    }
+
+    .section-copy {
+      max-width: 58ch;
+    }
+
+    .grid-2, .grid-3 {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .list-item {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.56);
+    }
+
+    .list-item h4 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .architecture {
+      display: grid;
+      gap: 18px;
+    }
+
+    .layer {
+      border-radius: 24px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.72));
+    }
+
+    .layer-label {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .layer-title {
+      font-size: 28px;
+      font-family: Georgia, "Times New Roman", serif;
+      color: #18212b;
+      margin-bottom: 10px;
+      line-height: 1.12;
+    }
+
+    .layer-sub {
+      color: var(--muted);
+      max-width: 70ch;
+    }
+
+    .sub-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .sub-box {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(35, 74, 99, 0.06);
+      border: 1px solid rgba(35, 74, 99, 0.10);
+    }
+
+    .sub-box strong {
+      display: block;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .quote-block {
+      padding: 28px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(35, 74, 99, 0.10), rgba(63, 122, 103, 0.10));
+      border: 1px solid rgba(35, 74, 99, 0.10);
+    }
+
+    .quote-block p {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 28px;
+      line-height: 1.25;
+      color: #1d3142;
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .pillar {
+      border-radius: 20px;
+      padding: 20px;
+      background: rgba(255,255,255,0.64);
+      border: 1px solid var(--line);
+      min-height: 180px;
+    }
+
+    .pillar .number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .pillar h4 {
+      color: var(--primary);
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .tagline-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .tagline {
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(127, 90, 60, 0.10);
+      color: var(--secondary);
+      font-weight: 700;
+      font-size: 14px;
+      border: 1px solid rgba(127, 90, 60, 0.12);
+    }
+
+    footer {
+      padding: 20px 0 48px;
+    }
+
+    .footer-card {
+      padding: 24px 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .footer-card p {
+      color: var(--muted);
+      max-width: 68ch;
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .grid-2,
+      .grid-3,
+      .sub-grid,
+      .pillars {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        min-height: unset;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner,
+      .section-header,
+      .footer-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero {
+        padding-top: 36px;
+      }
+
+      .hero-card,
+      .metric-card,
+      .mini-card,
+      .section-card {
+        padding: 24px;
+      }
+
+      h1 {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand-lockup">
+        <span class="eyebrow">Strategische Markenarchitektur</span>
+        <span class="brand-name">Dr. Stephanie Rohac</span>
+      </div>
+      <nav class="nav">
+        <a href="#positionierung">Positionierung</a>
+        <a href="#architektur">Architektur</a>
+        <a href="#markenplattform">Markenplattform</a>
+        <a href="#werte">Wertearchitektur</a>
+        <a href="#autoritaet">Autoritätsarchitektur</a>
+        <a href="#tonalitaet">Tonalität</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-grid">
+        <article class="card hero-card">
+          <div>
+            <div class="eyebrow">Mock-up für Rebranding & strategische Schärfung</div>
+            <h1>Transformation mit Tiefe, Klarheit und Wirksamkeit.</h1>
+            <p class="hero-subtitle">
+              Dieses Mock-up übersetzt die geschärfte Positionierung von Dr. Stephanie Rohac in eine visuelle strategische Architektur: als Grundlage für Rebranding, Corporate Design, Website und Messaging.
+            </p>
+            <div class="hero-statement">
+              <strong>Dachpositionierung</strong>
+              <p>Dr. Stephanie Rohac ist strategische, psychologisch fundierte Vordenkerin und Gestalterin für wirksame Transformation – mit Fokus auf Organisationskultur, Führung und Kommunikation.</p>
+            </div>
+            <div class="chips">
+              <span class="chip">Transformation als Dach</span>
+              <span class="chip">Organisationskultur als Hebel</span>
+              <span class="chip">Führung als Wirksamkeitsraum</span>
+              <span class="chip">Kommunikation als verbindende Kraft</span>
+            </div>
+          </div>
+        </article>
+
+        <aside class="hero-side">
+          <article class="card metric-card">
+            <h3>Markenrolle</h3>
+            <div class="big">Vordenkerin<br>& Gestalterin</div>
+            <p>Thought Leadership und Mandatsfähigkeit werden nicht gegeneinander ausgespielt, sondern strategisch verbunden.</p>
+          </article>
+
+          <article class="card mini-card">
+            <h3>Strategische Logik</h3>
+            <p><strong style="color: var(--primary);">Transformation</strong> ist das Dachnarrativ. <strong style="color: var(--primary);">Organisationskultur, Führung und Kommunikation</strong> sind die drei tragenden Hebel der Marke.</p>
+          </article>
+
+          <article class="card mini-card">
+            <h3>Dosierter Zukunftsrahmen</h3>
+            <p>Technologische Zukunftsthemen bleiben anschlussfähig, werden aber dosiert eingesetzt. Die Marke spricht primär über Transformation – und rahmt KI nur dort, wo sie strategisch Relevanz erzeugt.</p>
+          </article>
+
+          <article class="card mini-card">
+            <h3>Wertebasierte Tiefenstruktur</h3>
+            <p>Die Marke wird von fünf Werten in drei Schichten getragen: <strong style="color: var(--primary);">Tiefe und Menschlichkeit</strong> als Fundament, <strong style="color: var(--primary);">Orientierung und Wirksamkeit</strong> als Haltung sowie <strong style="color: var(--primary);">Entwicklung</strong> als Dynamik.</p>
+          </article>
+
+          <article class="card mini-card">
+            <h3>Autoritätsarchitektur</h3>
+            <p>Die Marke vereint <strong style="color: var(--primary);">akademische Legitimation</strong>, <strong style="color: var(--primary);">Führungserfahrung</strong>, <strong style="color: var(--primary);">organisational erprobte Praxis</strong>, <strong style="color: var(--primary);">Kommunikationskompetenz</strong> und <strong style="color: var(--primary);">internationale Anschlussfähigkeit</strong>.</p>
+          </article>
+        </aside>
+      </div>
+    </section>
+
+    <main>
+      <section id="positionierung" class="section">
+        <article class="card section-card">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">01 · Positionierung</div>
+              <h2 class="section-title">Eine führende Expertinnenmarke statt einer reinen Leistungsmarke.</h2>
+            </div>
+            <p class="section-copy">Die Marke wird nicht primär über Rollen wie Coach, Beraterin oder Speakerin definiert. Diese Rollen folgen aus einer klaren Kategorie: wirksame Transformation, psychologisch fundiert und strategisch gestaltet.</p>
+          </div>
+
+          <div class="quote-block">
+            <p>Transformation gelingt dort, wo Organisationskultur, Führung und Kommunikation wirksam zusammenspielen.</p>
+          </div>
+
+          <div class="grid-3" style="margin-top: 18px;">
+            <div class="list-item">
+              <h4>Kategorie</h4>
+              <p>Strategische, psychologisch fundierte Vordenkerin und Gestalterin für wirksame Transformation.</p>
+            </div>
+            <div class="list-item">
+              <h4>Differenzierung</h4>
+              <p>Transformation wird nicht als reine Prozess- oder Toolfrage gelesen, sondern als Zusammenspiel von Kultur, Führung, Kommunikation und psychologischer Wirksamkeit.</p>
+            </div>
+            <div class="list-item">
+              <h4>Marktversprechen</h4>
+              <p>Komplexer Wandel wird kulturell tragfähig, kommunikativ anschlussfähig und führungsseitig wirksam gestaltbar.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="architektur" class="section">
+        <article class="card section-card">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">02 · Strategische Architektur</div>
+              <h2 class="section-title">Klare Ordnung statt Themenfülle.</h2>
+            </div>
+            <p class="section-copy">Die Architektur macht sichtbar, wie sich Dachnarrativ, Wirkhebel, Rollen und Zukunftsrahmen zueinander verhalten. So bleibt die Marke fokussiert und trotzdem anschlussfähig.</p>
+          </div>
+
+          <div class="architecture">
+            <div class="layer">
+              <div class="layer-label">Dachnarrativ</div>
+              <div class="layer-title">Transformation</div>
+              <p class="layer-sub">Transformation ist der übergeordnete Denk- und Wirkungsraum der Marke. Sie bildet den Rahmen für Thought Leadership, Advisory, Coaching, Speaking und Angebotsarchitektur.</p>
+            </div>
+
+            <div class="layer">
+              <div class="layer-label">Tragende Hebel</div>
+              <div class="layer-title">Organisationskultur · Führung · Kommunikation</div>
+              <p class="layer-sub">Diese drei Felder sind keine losen Themencluster, sondern die miteinander verschränkten Hebel wirksamer Transformation.</p>
+              <div class="sub-grid">
+                <div class="sub-box">
+                  <strong>Organisationskultur</strong>
+                  Kultur als Tiefenstruktur von Verhalten, Lernen, Orientierung und Veränderungsfähigkeit.
+                </div>
+                <div class="sub-box">
+                  <strong>Führung</strong>
+                  Führung als Raum für Richtung, Verantwortung, Wirksamkeit und Handlungsfähigkeit.
+                </div>
+                <div class="sub-box">
+                  <strong>Kommunikation</strong>
+                  Kommunikation als verbindende Kraft, die Wandel verstehbar, anschlussfähig und wirksam macht.
+                </div>
+              </div>
+            </div>
+
+            <div class="layer">
+              <div class="layer-label">Markenrolle</div>
+              <div class="layer-title">Vordenkerin · Gestalterin · Strategin</div>
+              <p class="layer-sub">Die Marke vereint Deutung, Gestaltung und strategische Präzision. Dadurch bleibt sie intellektuell anschlussfähig und zugleich klar mandatsfähig.</p>
+            </div>
+
+            <div class="layer">
+              <div class="layer-label">Zukunftsrahmen</div>
+              <div class="layer-title">Technologische und gesellschaftliche Transformation – dosiert integriert</div>
+              <p class="layer-sub">Zukunftsthemen wie KI werden nicht zum dominanten Markenlabel gemacht. Sie erscheinen auf Leistungs-, Denk- und Zukunftsebene dort, wo sie Veränderungsdruck, Lernanforderungen oder neue kulturelle Fragen sichtbar machen.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="werte" class="section">
+        <article class="card section-card">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">03 · Wertearchitektur</div>
+              <h2 class="section-title">Die innere Tiefenstruktur der Marke.</h2>
+            </div>
+            <p class="section-copy">Die Wertearchitektur ist kein Zusatzmodul, sondern das innere Ordnungssystem der Marke. Sie übersetzt psychologische Substanz, strategische Haltung und transformative Bewegung in einen belastbaren Rahmen für Corporate Design, Sprache und Markenerlebnis.</p>
+          </div>
+
+          <div class="architecture">
+            <div class="layer">
+              <div class="layer-label">Fundament</div>
+              <div class="layer-title">Tiefe · Menschlichkeit</div>
+              <p class="layer-sub">Diese erste Schicht bildet die psychologische und ethische Basis der Marke. Sie sorgt dafür, dass Transformation nicht oberflächlich, instrumentell oder technokratisch gelesen wird.</p>
+              <div class="sub-grid">
+                <div class="sub-box">
+                  <strong>Tiefe</strong>
+                  Wahrnehmen, eintauchen, loslassen. Die Marke geht dahin, wo es unter der Oberfläche liegt, und arbeitet dort, wo kulturelle und psychologische Dynamiken wirksam werden.
+                </div>
+                <div class="sub-box">
+                  <strong>Menschlichkeit</strong>
+                  Fühlen, einschwingen, verbinden. Der Mensch ist nicht Faktor, sondern Maßstab. Humanzentrierung ist keine weiche Geste, sondern normative Grundlage.
+                </div>
+                <div class="sub-box">
+                  <strong>CD-Implikation</strong>
+                  Das Design braucht Resonanz, Wärme, Tiefe und Präsenz – ohne weichgespült oder beliebig zu wirken.
+                </div>
+              </div>
+            </div>
+
+            <div class="layer">
+              <div class="layer-label">Haltung</div>
+              <div class="layer-title">Orientierung · Wirksamkeit</div>
+              <p class="layer-sub">Diese zweite Schicht übersetzt das Fundament in Führungs- und Entscheidungsfähigkeit. Sie macht die Marke anschlussfähig für Strategie, Executive-Kontexte und Mandatsfähigkeit.</p>
+              <div class="sub-grid">
+                <div class="sub-box">
+                  <strong>Orientierung</strong>
+                  Öffnen, durchdringen, ausrichten. Komplexität wird nicht verwaltet, sondern durchdrungen, bis Richtung sichtbar wird.
+                </div>
+                <div class="sub-box">
+                  <strong>Wirksamkeit</strong>
+                  Gestalten, befähigen, ermöglichen. Die Marke steht nicht nur für Verstehen, sondern für echte Wirkung im System.
+                </div>
+                <div class="sub-box">
+                  <strong>CD-Implikation</strong>
+                  Das Design braucht Struktur, Klarheit, Hierarchie und Urteilskraft – sichtbar in Typografie, Layout, Systematik und Präsenz.
+                </div>
+              </div>
+            </div>
+
+            <div class="layer">
+              <div class="layer-label">Dynamik</div>
+              <div class="layer-title">Entwicklung</div>
+              <p class="layer-sub">Die dritte Schicht bringt Bewegung, Zukunft und Spannkraft in die Marke. Sie verhindert Statik und macht Transformation als fortlaufende Entwicklung sichtbar.</p>
+              <div class="sub-grid">
+                <div class="sub-box">
+                  <strong>Entwicklung</strong>
+                  Irritieren, ermutigen, bewegen. Die Marke setzt produktive Impulse, hält Spannung aus und bringt Menschen und Systeme in Bewegung.
+                </div>
+                <div class="sub-box">
+                  <strong>Markenwirkung</strong>
+                  Die Marke bleibt nicht bei Analyse stehen, sondern vermittelt Aufbruch, Richtung und Entwicklungskraft.
+                </div>
+                <div class="sub-box">
+                  <strong>CD-Implikation</strong>
+                  Das Design darf nicht statisch oder zu schwer wirken. Es braucht subtile Dynamik, Spannung und Entwicklung – ohne Trendeffekte oder Hektik.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top: 18px;">
+            <div class="list-item">
+              <h4>Gesamtlogik</h4>
+              <p>Tiefe und Menschlichkeit bilden das Fundament. Orientierung und Wirksamkeit übersetzen dies in Haltung. Entwicklung gibt der Marke Bewegung. Gemeinsam tragen die Werte die Positionierung als strategische, psychologisch fundierte Vordenkerin und Gestalterin für wirksame Transformation.</p>
+            </div>
+            <div class="list-item">
+              <h4>Bedeutung für den CD-Relaunch</h4>
+              <p>Das Corporate Design soll diese Schichtung sichtbar machen: tief und menschlich im Grundgefühl, klar und wirksam in der Struktur, beweglich und zukunftsfähig in der Dynamik. So entsteht kein dekoratives Erscheinungsbild, sondern ein strategisch tragfähiges Markensystem.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="autoritaet" class="section">
+        <article class="card section-card">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">04 · Autoritätsarchitektur</div>
+              <h2 class="section-title">Warum diese Marke glaubwürdig führen darf.</h2>
+            </div>
+            <p class="section-copy">Die Autoritätsarchitektur macht explizit, worauf die Marke ihre Glaubwürdigkeit stützt. Sie übersetzt den CV nicht in eine bloße Vita, sondern in sichtbare Autoritätssignale für Corporate Design, Messaging und Markenerlebnis.</p>
+          </div>
+
+          <div class="architecture">
+            <div class="layer">
+              <div class="layer-label">Akademische Legitimation</div>
+              <div class="layer-title">Psychologisch fundiert · lehrend · publizierend</div>
+              <p class="layer-sub">Die Marke ist nicht nur fachlich interessiert, sondern akademisch legitimiert: mit Promotion, langjähriger Hochschullehre, theoriegestützter Arbeit und publizistischer Präsenz. Dadurch entsteht intellektuelle Tiefe, Begriffsstärke und die Fähigkeit, komplexe Themen belastbar zu rahmen.</p>
+              <div class="sub-grid">
+                <div class="sub-box">
+                  <strong>Für die Marke</strong>
+                  Wissenschaftliche Fundierung ist ein Kern ihrer Autorität – nicht als Distinktionsgeste, sondern als Substanzquelle.
+                </div>
+                <div class="sub-box">
+                  <strong>Für das Messaging</strong>
+                  Die Marke darf klarer mit Begriffen, Modellen, Deutung und Urteilskraft arbeiten als klassische Beratungs- oder Coachingmarken.
+                </div>
+                <div class="sub-box">
+                  <strong>CD-Implikation</strong>
+                  Das Design braucht intellektuelle Ruhe, Systematik und Präzision – nicht Trendigkeit, Lautheit oder dekorative Überinszenierung.
+                </div>
+              </div>
+            </div>
+
+            <div class="layer">
+              <div class="layer-label">Organisational erprobte Praxis</div>
+              <div class="layer-title">Unternehmerisch · mandatsfähig · realitätsnah</div>
+              <p class="layer-sub">Die Marke ist nicht rein akademisch oder inspirativ, sondern in realen Organisationen erprobt. Unternehmerinnenschaft, Organisationsentwicklung und eine breite Praxis mit Wirtschaft, Hochschulen und Institutionen machen die Positionierung belastbar und anschlussfähig.</p>
+              <div class="sub-grid">
+                <div class="sub-box">
+                  <strong>Für die Marke</strong>
+                  Thought Leadership wird durch reale Wirksamkeit getragen – nicht nur durch Theorie oder Haltung.
+                </div>
+                <div class="sub-box">
+                  <strong>Für das Messaging</strong>
+                  Die Marke darf selbstverständlicher von Wirksamkeit, Gestaltung und organisationaler Realität sprechen.
+                </div>
+                <div class="sub-box">
+                  <strong>CD-Implikation</strong>
+                  Das Erscheinungsbild muss premium und substanziell wirken – aber nie abgehoben, unnahbar oder rein akademisch.
+                </div>
+              </div>
+            </div>
+
+            <div class="layer">
+              <div class="layer-label">Führungserfahrung</div>
+              <div class="layer-title">Führung nicht nur analysiert, sondern selbst erlebt</div>
+              <p class="layer-sub">Die Marke spricht über Führung mit eigener Führungsverantwortung im internationalen Unternehmenskontext. Das verleiht dem Feld Führung zusätzliche Glaubwürdigkeit: nicht nur psychologisch verstanden, sondern auch praktisch durchlebt.</p>
+              <div class="sub-grid">
+                <div class="sub-box">
+                  <strong>Für die Marke</strong>
+                  Führung ist nicht Nebenfeld, sondern erfahrungsbasiert legitimierter Teil der Positionierung.
+                </div>
+                <div class="sub-box">
+                  <strong>Für das Messaging</strong>
+                  Die Marke kann über Verantwortung, Richtung, Teamdynamik und Steuerungsrealität mit größerer Selbstverständlichkeit sprechen.
+                </div>
+                <div class="sub-box">
+                  <strong>CD-Implikation</strong>
+                  Das Design soll Souveränität und Urteilskraft ausstrahlen – nicht nur Empathie oder Reflexionsstärke.
+                </div>
+              </div>
+            </div>
+
+            <div class="layer">
+              <div class="layer-label">Kommunikationslinie</div>
+              <div class="layer-title">Kommunikation als biografischer und fachlicher Leitfaden</div>
+              <p class="layer-sub">Kommunikation ist nicht bloßer Zusatzhebel, sondern zieht sich durch Ausbildung, Lehre, Praxis, Führungserfahrung und Publikationen. Sie ist damit ein originärer Bestandteil der Marke und kein nachträglich ergänztes Themenfeld.</p>
+              <div class="sub-grid">
+                <div class="sub-box">
+                  <strong>Für die Marke</strong>
+                  Kommunikation verbindet Kultur, Führung und Transformation – und gibt der Marke ihre besondere Kohärenz.
+                </div>
+                <div class="sub-box">
+                  <strong>Für das Messaging</strong>
+                  Kommunikation darf sichtbarer als verbindende Kraft, Übersetzungsleistung und Wirksamkeitshebel ins Zentrum rücken.
+                </div>
+                <div class="sub-box">
+                  <strong>CD-Implikation</strong>
+                  Das Design sollte Klarheit, Resonanz und Anschlussfähigkeit transportieren – als Ausdruck gelingender Verständigung, nicht nur als formale Ordnung.
+                </div>
+              </div>
+            </div>
+
+            <div class="layer">
+              <div class="layer-label">Internationale Anschlussfähigkeit</div>
+              <div class="layer-title">Interkulturell · englischfähig · europäisch anschlussfähig</div>
+              <p class="layer-sub">Internationale und interkulturelle Kompetenz ist biografisch wie fachlich angelegt: durch Forschung im Bereich Intercultural Communication, internationale Führungsrollen, englischsprachige Lehre und interkulturelle Praxis. Die Marke ist damit nicht nur lokal wirksam, sondern potenziell international tragfähig.</p>
+              <div class="sub-grid">
+                <div class="sub-box">
+                  <strong>Für die Marke</strong>
+                  Internationale Anschlussfähigkeit ist kein Zukunftswunsch, sondern bereits angelegte Qualität der Positionierung.
+                </div>
+                <div class="sub-box">
+                  <strong>Für das Messaging</strong>
+                  Sprache und Narrative sollten auch in englischen oder internationalen Kontexten tragfähig bleiben.
+                </div>
+                <div class="sub-box">
+                  <strong>CD-Implikation</strong>
+                  Das Erscheinungsbild darf nicht provinziell, kleinteilig oder zu lokal codiert wirken; es braucht Reife, Offenheit und internationale Lesbarkeit.
+                </div>
+              </div>
+            </div>
+
+            <div class="layer">
+              <div class="layer-label">Langzeitkontinuität</div>
+              <div class="layer-title">Transformation ist kein Trendthema, sondern Langzeitlinie</div>
+              <p class="layer-sub">Die Arbeit an Organisationskultur, Kommunikation, Veränderung und psychologischer Wirksamkeit zieht sich über viele Jahre durch Laufbahn, Lehre und Publikationen. Das verleiht der Marke Reife, Tiefgang und eine seltene Kontinuität im Transformationsfeld.</p>
+              <div class="sub-grid">
+                <div class="sub-box">
+                  <strong>Für die Marke</strong>
+                  Transformation wird glaubwürdig als tief verankertes Arbeitsfeld und nicht als modisches Narrativ lesbar.
+                </div>
+                <div class="sub-box">
+                  <strong>Für das Messaging</strong>
+                  Die Marke darf reifer, ruhiger und autoritativer auftreten – mit der Selbstverständlichkeit langjähriger Beschäftigung.
+                </div>
+                <div class="sub-box">
+                  <strong>CD-Implikation</strong>
+                  Das Design sollte zeitloser als trendgetrieben sein: reif, belastbar und anschlussfähig über kurzfristige Moden hinaus.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top: 18px;">
+            <div class="list-item">
+              <h4>Autoritätsformel</h4>
+              <p>Psychologisch fundiert. Akademisch legitimiert. Organisational erprobt. Kommunikationsstark. International anschlussfähig.</p>
+            </div>
+            <div class="list-item">
+              <h4>Bedeutung für den CD-Relaunch</h4>
+              <p>Das Corporate Design soll diese Autorität nicht dekorativ illustrieren, sondern lesbar machen: in souveräner Typografie, präziser Struktur, reifer Farbwelt, ruhiger Klarheit und einer Bildsprache, die Substanz, Präsenz und internationale Relevanz vermittelt.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="markenplattform" class="section">
+        <article class="card section-card">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">05 · Markenplattform</div>
+              <h2 class="section-title">Die strategische Grundlage für Rebranding, Messaging und Design.</h2>
+            </div>
+            <p class="section-copy">Die Plattform ist so formuliert, dass sie zugleich für Corporate Design, Website-Struktur, Angebotsdarstellung, Speakerprofil und Thought-Leadership-Kommunikation genutzt werden kann.</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="list-item">
+              <h4>Purpose</h4>
+              <p>Transformation menschlich, klar und wirksam gestaltbar machen.</p>
+            </div>
+            <div class="list-item">
+              <h4>Vision</h4>
+              <p>Eine Arbeitswelt, in der Kultur, Führung und Kommunikation verantwortungsvoll Wandel ermöglichen.</p>
+            </div>
+            <div class="list-item">
+              <h4>Mission</h4>
+              <p>Menschen, Teams und Organisationen dabei begleiten, befähigen und bestärken, Transformation durch Organisationskultur, Führung und Kommunikation humanzentriert und wirksam zu gestalten.</p>
+            </div>
+            <div class="list-item">
+              <h4>Markenversprechen</h4>
+              <p>Transformation in ihrer menschlichen, kulturellen und kommunikativen Tiefe verstehbar – und in Organisationen wirksam gestaltbar machen.</p>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-top: 18px;">
+            <div class="list-item">
+              <h4>Inhaltlicher Kern</h4>
+              <p>Transformation durch Organisationskultur, Führung und Kommunikation.</p>
+            </div>
+            <div class="list-item">
+              <h4>Methodischer Kern</h4>
+              <p>Psychologisch fundiert, strategisch klar, systemisch wirksam.</p>
+            </div>
+            <div class="list-item">
+              <h4>Persönlicher Kern</h4>
+              <p>Souverän, klug, verbindlich, bewegend und zukunftsorientiert.</p>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top: 18px;">
+            <div class="list-item">
+              <h4>Werte als Markenfundament</h4>
+              <p>Die Markenplattform wird von fünf Werten getragen: Tiefe, Menschlichkeit, Orientierung, Wirksamkeit und Entwicklung. Sie geben der Marke psychologische Substanz, strategische Richtung und bewegende Kraft.</p>
+            </div>
+            <div class="list-item">
+              <h4>Übersetzung in Markenerlebnis</h4>
+              <p>Die Marke soll tief und resonant wirken, klar und orientierend führen, wirksam und bewegend in Erscheinung treten. Genau daraus ergeben sich die Leitlinien für Sprache, Gestaltung, Bildwelt und Systematik.</p>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top: 18px;">
+            <div class="list-item">
+              <h4>Autorität als Trägerschicht</h4>
+              <p>Die Markenplattform wird zusätzlich von einer klar lesbaren Autoritätsarchitektur gestützt: akademisch legitimiert, führungserfahren, organisationsnah, kommunikativ tief verankert und international anschlussfähig.</p>
+            </div>
+            <div class="list-item">
+              <h4>Übersetzung in Markenwahrnehmung</h4>
+              <p>Die Marke soll nicht nur klug und menschlich wirken, sondern auch belastbar, reif, souverän und substanziell. Genau diese Autorität schützt sie vor Beliebigkeit und macht sie im Executive- und Thought-Leadership-Kontext glaubwürdig.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section">
+        <article class="card section-card">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">06 · Kernbotschaften</div>
+              <h2 class="section-title">Das Messaging ordnet die Marke über Wirkung statt über Angebotslisten.</h2>
+            </div>
+            <p class="section-copy">Die Marke gewinnt an Schärfe, wenn ihre Botschaften nicht additiv, sondern hierarchisch erzählt werden: zuerst Transformation, dann Hebel, dann Zukunftskontext.</p>
+          </div>
+
+          <div class="pillars">
+            <div class="pillar">
+              <div class="number">1</div>
+              <h4>Primärbotschaft</h4>
+              <p>Wirksame Transformation braucht Organisationskultur, Führung und Kommunikation.</p>
+            </div>
+            <div class="pillar">
+              <div class="number">2</div>
+              <h4>Sekundärbotschaft</h4>
+              <p>Psychologische Fundierung macht Veränderung nicht weicher, sondern wirksamer.</p>
+            </div>
+            <div class="pillar">
+              <div class="number">3</div>
+              <h4>Tertiärbotschaft</h4>
+              <p>Zukunftsthemen wie KI werden dort relevant, wo sie neue Anforderungen an Lernen, Orientierung, Führung und Kultur sichtbar machen.</p>
+            </div>
+            <div class="pillar">
+              <div class="number">4</div>
+              <h4>Autoritätsbotschaft</h4>
+              <p>Psychologische Tiefe, wissenschaftliche Fundierung und Praxiserfahrung verbinden sich zu klarer strategischer Wirksamkeit.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="tonalitaet" class="section">
+        <article class="card section-card">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">07 · Tonalität & Ausdruck</div>
+              <h2 class="section-title">Klug. Klar. Menschlich. Wirksam.</h2>
+            </div>
+            <p class="section-copy">Die Tonalität schützt die Marke vor zwei Risiken: zu generischer Beratungsoptik und zu weich gezeichneter Coaching-Sprache.</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="list-item">
+              <h4>Die Marke soll klingen wie</h4>
+              <p>substanziell, präzise, zugewandt, ruhig, wirksamkeitsorientiert und intellektuell anschlussfähig.</p>
+            </div>
+            <div class="list-item">
+              <h4>Die Marke soll nicht klingen wie</h4>
+              <p>überladen, buzzy, technokratisch, zu coachig, zu abstrakt oder rein inspirativ ohne Relevanz für organisationale Realität.</p>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-top: 18px;">
+            <div class="list-item">
+              <h4>Tiefe & Menschlichkeit</h4>
+              <p>Sprachlich zeigt sich diese Schicht in Resonanz, Ernsthaftigkeit, Wärme und der Bereitschaft, unter die Oberfläche zu gehen.</p>
+            </div>
+            <div class="list-item">
+              <h4>Orientierung & Wirksamkeit</h4>
+              <p>Hier zeigt sich die Marke in Präzision, Klarheit, Urteilskraft und dem Anspruch, nicht nur zu reflektieren, sondern Wirkung zu erzeugen.</p>
+            </div>
+            <div class="list-item">
+              <h4>Entwicklung</h4>
+              <p>Diese Schicht bringt Bewegung, produktive Spannung und Zukunftsrichtung in Sprache, Dramaturgie und visuelle Dynamik.</p>
+            </div>
+         
